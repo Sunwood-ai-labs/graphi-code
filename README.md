@@ -4,10 +4,19 @@
 
 # 🎨 Graphi Code
 
-[![Next.js](https://img.shields.io/badge/Next.js-14.0.4-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
-[![React](https://img.shields.io/badge/React-18-blue?style=for-the-badge&logo=react)](https://reactjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
-[![TailwindCSS](https://img.shields.io/badge/Tailwind-4.1.10-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
+[![Next.js](https://img.shields.io/badge/Next.js-14.0.4-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=white)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![TailwindCSS](https://img.shields.io/badge/Tailwind-4.1.10-06B6D4?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+
+[![CodeMirror](https://img.shields.io/badge/CodeMirror-6-D30707?style=for-the-badge&logo=codemirror&logoColor=white)](https://codemirror.net/)
+[![PostCSS](https://img.shields.io/badge/PostCSS-10.4.21-DD3A0A?style=for-the-badge&logo=postcss&logoColor=white)](https://postcss.org/)
+[![ESLint](https://img.shields.io/badge/ESLint-8-4B32C3?style=for-the-badge&logo=eslint&logoColor=white)](https://eslint.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-20+-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
+
+[![GitHub Pages](https://img.shields.io/badge/GitHub_Pages-Deploy-222222?style=for-the-badge&logo=github&logoColor=white)](https://pages.github.com/)
+[![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-CI/CD-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)](https://github.com/features/actions)
+[![Vercel](https://img.shields.io/badge/Vercel-Ready-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
 
 **リアルタイムプレビュー機能付きHTML エディター**
 
@@ -125,28 +134,6 @@ graphi-code/
 ├── 📄 tailwind.config.js          # TailwindCSS設定
 └── 📄 package.json                # 依存関係定義
 ```
-
-## 🛠️ 技術スタック
-
-### フロントエンド
-- **⚛️ React 18**: モダンなUI構築
-- **🔷 TypeScript**: 型安全な開発
-- **⚡ Next.js 14**: フルスタックReactフレームワーク（App Router）
-
-### スタイリング
-- **🎨 TailwindCSS**: ユーティリティファーストCSS
-- **🎭 CSS Variables**: テーマ切り替え対応
-- **📱 Responsive Design**: モバイルファースト設計
-
-### エディター
-- **📝 CodeMirror 6**: 高性能コードエディター
-- **🎯 HTML Language Support**: シンタックスハイライト
-- **🔄 Real-time Sync**: リアルタイム同期機能
-
-### デプロイ・CI/CD
-- **🚀 GitHub Pages**: 静的サイトホスティング
-- **⚙️ GitHub Actions**: 自動ビルド・デプロイ
-- **📦 Static Export**: 静的ファイル生成
 
 ---
 
