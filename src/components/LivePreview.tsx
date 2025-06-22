@@ -9,7 +9,6 @@ interface LivePreviewProps {
 
 const LivePreview: React.FC<LivePreviewProps> = ({ htmlContent, onHtmlChange }) => {
   const previewRef = useRef<HTMLDivElement>(null);
-  const previewRef = useRef<HTMLDivElement>(null);
   const observerRef = useRef<MutationObserver | null>(null);
   const internalChangeRef = useRef(false); // Ref to track internal changes
 
