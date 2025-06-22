@@ -9,20 +9,17 @@ interface LivePreviewProps {
 
 const LivePreview: React.FC<LivePreviewProps> = ({ htmlContent, onHtmlChange }) => {
   const previewRef = useRef<HTMLDivElement>(null);
-  const previewRef = useRef<HTMLDivElement>(null);
   const observerRef = useRef<MutationObserver | null>(null);
   const internalChangeRef = useRef(false); // Ref to track internal changes
 
   const isEditable = (element: HTMLElement): boolean => {
-    const editableTags = ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'LI', 'SPAN', 'STRONG', 'EM', 'TD', 'TH', 'FIGCAPTION', 'BLOCKQUOTE', 'PRE'];
-    if (editableTags.includes(element.tagName)) {
-      const hasBlockChildren = Array.from(element.children).some(child => {
-        const displayStyle = window.getComputedStyle(child).display;
-        return ['block', 'list-item', 'table', 'flex', 'grid'].includes(displayStyle);
-      });
-      return !hasBlockChildren;
+    // Ensure this function only executes expensive DOM/style calculations on the client
+    if (typeof window === 'undefined') {
+      return false;
     }
-    return false;
+    const editableTags = ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'LI', 'SPAN', 'STRONG', 'EM', 'TD', 'TH', 'FIGCAPTION', 'BLOCKQUOTE', 'PRE'];
+    // editableTags に含まれていれば、子要素の型に関わらず編集可能とする
+    return editableTags.includes(element.tagName);
   };
 
   const makeContentEditable = useCallback((rootElement: HTMLElement) => {
@@ -128,7 +125,6 @@ const LivePreview: React.FC<LivePreviewProps> = ({ htmlContent, onHtmlChange }) 
     if (previewRef.current) {
         makeContentEditable(previewRef.current);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [makeContentEditable]); // makeContentEditable is stable due to useCallback
 
 

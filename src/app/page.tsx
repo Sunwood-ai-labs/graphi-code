@@ -24,15 +24,56 @@ export default function EditorPage() {
     setHtmlContent(newHtml);
   }, []);
 
+  const handleFileImport = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file && file.type === "text/html") {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const fileContent = e.target?.result;
+        if (typeof fileContent === 'string') {
+          setHtmlContent(fileContent); // 読み込んだ内容でstateを更新
+          console.log("HTML file imported and content updated.");
+        } else {
+          alert("Could not read file content.");
+        }
+      };
+      reader.onerror = () => {
+        alert("Error reading file.");
+      };
+      reader.readAsText(file);
+    } else if (file) {
+      alert("Please select an HTML file.");
+    }
+    // Reset file input to allow selecting the same file again
+    event.target.value = '';
+  };
+
   return (
-    // Use flex-grow to take available space within main-content-area (defined in layout)
-    // flex-row ensures side-by-side. Removed h-screen and bg-gray-100.
-    <div className="flex flex-row flex-grow">
+    // Default to flex-col (stacked) for small screens, md:flex-row for medium screens and up.
+    <div className="flex flex-col md:flex-row flex-grow">
       {/* Left Column: HTML Editor */}
-      {/* Applied .editor-preview-pane for consistent theming (border, bg) from globals.css */}
-      <div className="w-1/2 h-full flex flex-col editor-preview-pane">
+      {/* w-full for small screens (stacked), md:w-1/2 for medium screens and up (side-by-side) */}
+      <div className="w-full md:w-1/2 h-auto md:h-full flex flex-col editor-preview-pane">
         {/* section-header will be themed by globals.css */}
-        <h2 className="section-header">HTML Editor</h2> {/* Removed Tailwind classes, rely on .section-header */}
+        <div className="section-header flex justify-between items-center"> {/* Flex container for header and button */}
+          <h2>HTML Editor</h2>
+          <div className="flex items-center"> {/* Button container, ensure items are aligned if multiple buttons */}
+            <input
+              type="file"
+              id="htmlFileInput"
+              accept=".html,text/html"
+              onChange={handleFileImport}
+              style={{ display: 'none' }} // Hide the default input
+            />
+            <button
+              onClick={() => document.getElementById('htmlFileInput')?.click()}
+              className="nav-btn" // Reuse existing button style from globals.css
+              title="Import HTML file"
+            >
+              Import HTML
+            </button>
+          </div>
+        </div>
         <div className="editor-component-wrapper"> {/* Wrapper for specific editor styling if needed */}
           <HtmlEditor value={htmlContent} onChange={handleEditorChange} />
         </div>
