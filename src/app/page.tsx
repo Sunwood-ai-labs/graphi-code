@@ -49,16 +49,15 @@ export default function EditorPage() {
   };
 
   return (
-    // Use flex-grow to take available space within main-content-area (defined in layout)
-    // flex-row ensures side-by-side. Removed h-screen and bg-gray-100.
-    <div className="flex flex-row flex-grow">
+    // Default to flex-col (stacked) for small screens, md:flex-row for medium screens and up.
+    <div className="flex flex-col md:flex-row flex-grow">
       {/* Left Column: HTML Editor */}
-      {/* Applied .editor-preview-pane for consistent theming (border, bg) from globals.css */}
-      <div className="w-1/2 h-full flex flex-col editor-preview-pane">
+      {/* w-full for small screens (stacked), md:w-1/2 for medium screens and up (side-by-side) */}
+      <div className="w-full md:w-1/2 h-auto md:h-full flex flex-col editor-preview-pane">
         {/* section-header will be themed by globals.css */}
         <div className="section-header flex justify-between items-center"> {/* Flex container for header and button */}
           <h2>HTML Editor</h2>
-          <div> {/* Button container */}
+          <div className="flex items-center"> {/* Button container, ensure items are aligned if multiple buttons */}
             <input
               type="file"
               id="htmlFileInput"
