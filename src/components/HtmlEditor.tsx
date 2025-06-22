@@ -3,8 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import { html } from '@codemirror/lang-html';
-// okaidia theme will be replaced by styles in globals.css or a custom theme object
-// import { okaidia } from '@uiw/codemirror-theme-okaidia';
 import { EditorView } from '@codemirror/view'; // To use EditorView.theme
 
 interface HtmlEditorProps {
