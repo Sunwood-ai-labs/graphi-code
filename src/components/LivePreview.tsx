@@ -18,15 +18,8 @@ const LivePreview: React.FC<LivePreviewProps> = ({ htmlContent, onHtmlChange }) 
       return false;
     }
     const editableTags = ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'LI', 'SPAN', 'STRONG', 'EM', 'TD', 'TH', 'FIGCAPTION', 'BLOCKQUOTE', 'PRE'];
-    if (editableTags.includes(element.tagName)) {
-      const hasBlockChildren = Array.from(element.children).some(child => {
-        // Check window again just before the call, though the outer check should suffice
-        const displayStyle = typeof window !== 'undefined' ? window.getComputedStyle(child).display : '';
-        return ['block', 'list-item', 'table', 'flex', 'grid'].includes(displayStyle);
-      });
-      return !hasBlockChildren;
-    }
-    return false;
+    // editableTags に含まれていれば、子要素の型に関わらず編集可能とする
+    return editableTags.includes(element.tagName);
   };
 
   const makeContentEditable = useCallback((rootElement: HTMLElement) => {
