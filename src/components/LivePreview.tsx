@@ -13,10 +13,15 @@ const LivePreview: React.FC<LivePreviewProps> = ({ htmlContent, onHtmlChange }) 
   const internalChangeRef = useRef(false); // Ref to track internal changes
 
   const isEditable = (element: HTMLElement): boolean => {
+    // Ensure this function only executes expensive DOM/style calculations on the client
+    if (typeof window === 'undefined') {
+      return false;
+    }
     const editableTags = ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'LI', 'SPAN', 'STRONG', 'EM', 'TD', 'TH', 'FIGCAPTION', 'BLOCKQUOTE', 'PRE'];
     if (editableTags.includes(element.tagName)) {
       const hasBlockChildren = Array.from(element.children).some(child => {
-        const displayStyle = window.getComputedStyle(child).display;
+        // Check window again just before the call, though the outer check should suffice
+        const displayStyle = typeof window !== 'undefined' ? window.getComputedStyle(child).display : '';
         return ['block', 'list-item', 'table', 'flex', 'grid'].includes(displayStyle);
       });
       return !hasBlockChildren;
@@ -127,7 +132,6 @@ const LivePreview: React.FC<LivePreviewProps> = ({ htmlContent, onHtmlChange }) 
     if (previewRef.current) {
         makeContentEditable(previewRef.current);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [makeContentEditable]); // makeContentEditable is stable due to useCallback
 
 

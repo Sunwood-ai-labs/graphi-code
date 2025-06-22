@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import { html } from '@codemirror/lang-html';
 // okaidia theme will be replaced by styles in globals.css or a custom theme object
@@ -13,6 +13,15 @@ interface HtmlEditorProps {
 }
 
 const HtmlEditor: React.FC<HtmlEditorProps> = ({ value, onChange }) => {
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
+
+  useEffect(() => {
+    // Ensure this runs only on the client
+    if (typeof window !== 'undefined') {
+      setIsDarkTheme(document.documentElement.getAttribute('data-theme') === 'dark');
+    }
+  }, []);
+
   return (
     <CodeMirror
       value={value}
@@ -56,7 +65,7 @@ const HtmlEditor: React.FC<HtmlEditorProps> = ({ value, onChange }) => {
           },
           // Syntax highlighting will be primarily handled by globals.css for now
           // or a more specific CodeMirror language theme if adopted later.
-        }, {dark: document.documentElement.getAttribute('data-theme') === 'dark'}) // Inform theme if dark mode is active
+        }, {dark: isDarkTheme}) // Use state variable
       ]}
       onChange={onChange}
       // theme prop can be 'light', 'dark', or a custom theme object.
