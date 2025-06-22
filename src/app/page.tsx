@@ -49,19 +49,47 @@ export default function EditorPage() {
     event.target.value = '';
   };
 
+  const handleDownload = () => {
+    const blob = new Blob([htmlContent], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'edited-content.html';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
       
       <div className="main-content-area flex flex-col md:flex-row flex-grow">
-        {/* Left Column: HTML Editor */}
+        {/* Left Column: Live Preview */}
         <div className="w-full md:w-1/2 h-auto md:h-full flex flex-col editor-preview-pane border-r">
+          <div className="section-header">
+            <div className="flex items-center gap-2">
+              <i className="fas fa-eye"></i>
+              <h2>Live Preview</h2>
+            </div>
+            <div className="flex items-center gap-2">
+              <i className="fas fa-edit" title="Click elements to edit"></i>
+            </div>
+          </div>
+          <div className="live-preview-wrapper flex-grow">
+            <LivePreview htmlContent={htmlContent} onHtmlChange={handlePreviewChange} />
+          </div>
+        </div>
+
+        {/* Right Column: HTML Editor */}
+        <div className="w-full md:w-1/2 h-auto md:h-full flex flex-col editor-preview-pane">
           <div className="section-header">
             <div className="flex items-center gap-2">
               <i className="fas fa-code"></i>
               <h2>HTML Editor</h2>
             </div>
-            <div className="flex items-center">
+            <div className="flex items-center gap-2">
               <input
                 type="file"
                 id="htmlFileInput"
@@ -77,26 +105,18 @@ export default function EditorPage() {
                 <i className="fas fa-file-import"></i>
                 Import
               </button>
+              <button
+                onClick={handleDownload}
+                className="nav-btn nav-btn-primary"
+                title="Download HTML file"
+              >
+                <i className="fas fa-download"></i>
+                Download
+              </button>
             </div>
           </div>
           <div className="editor-component-wrapper flex-grow">
             <HtmlEditor value={htmlContent} onChange={handleEditorChange} />
-          </div>
-        </div>
-
-        {/* Right Column: Live Preview */}
-        <div className="w-full md:w-1/2 h-auto md:h-full flex flex-col editor-preview-pane">
-          <div className="section-header">
-            <div className="flex items-center gap-2">
-              <i className="fas fa-eye"></i>
-              <h2>Live Preview</h2>
-            </div>
-            <div className="flex items-center gap-2">
-              <i className="fas fa-edit" title="Click elements to edit"></i>
-            </div>
-          </div>
-          <div className="live-preview-wrapper flex-grow">
-            <LivePreview htmlContent={htmlContent} onHtmlChange={handlePreviewChange} />
           </div>
         </div>
       </div>
