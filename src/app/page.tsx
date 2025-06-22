@@ -2,7 +2,8 @@
 
 import React, { useState, useCallback } from 'react';
 import HtmlEditor from '@/components/HtmlEditor';
-import LivePreview from '@/components/LivePreview'; // Import the new LivePreview component
+import LivePreview from '@/components/LivePreview';
+import Navbar from '@/components/Navbar';
 
 export default function EditorPage() {
   const [htmlContent, setHtmlContent] = useState(
@@ -49,41 +50,54 @@ export default function EditorPage() {
   };
 
   return (
-    // Default to flex-col (stacked) for small screens, md:flex-row for medium screens and up.
-    <div className="flex flex-col md:flex-row flex-grow">
-      {/* Left Column: HTML Editor */}
-      {/* w-full for small screens (stacked), md:w-1/2 for medium screens and up (side-by-side) */}
-      <div className="w-full md:w-1/2 h-auto md:h-full flex flex-col editor-preview-pane">
-        {/* section-header will be themed by globals.css */}
-        <div className="section-header flex justify-between items-center"> {/* Flex container for header and button */}
-          <h2>HTML Editor</h2>
-          <div className="flex items-center"> {/* Button container, ensure items are aligned if multiple buttons */}
-            <input
-              type="file"
-              id="htmlFileInput"
-              accept=".html,text/html"
-              onChange={handleFileImport}
-              style={{ display: 'none' }} // Hide the default input
-            />
-            <button
-              onClick={() => document.getElementById('htmlFileInput')?.click()}
-              className="nav-btn" // Reuse existing button style from globals.css
-              title="Import HTML file"
-            >
-              Import HTML
-            </button>
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      
+      <div className="main-content-area flex flex-col md:flex-row flex-grow">
+        {/* Left Column: HTML Editor */}
+        <div className="w-full md:w-1/2 h-auto md:h-full flex flex-col editor-preview-pane border-r">
+          <div className="section-header">
+            <div className="flex items-center gap-2">
+              <i className="fas fa-code"></i>
+              <h2>HTML Editor</h2>
+            </div>
+            <div className="flex items-center">
+              <input
+                type="file"
+                id="htmlFileInput"
+                accept=".html,text/html"
+                onChange={handleFileImport}
+                style={{ display: 'none' }}
+              />
+              <button
+                onClick={() => document.getElementById('htmlFileInput')?.click()}
+                className="nav-btn nav-btn-secondary"
+                title="Import HTML file"
+              >
+                <i className="fas fa-file-import"></i>
+                Import
+              </button>
+            </div>
+          </div>
+          <div className="editor-component-wrapper flex-grow">
+            <HtmlEditor value={htmlContent} onChange={handleEditorChange} />
           </div>
         </div>
-        <div className="editor-component-wrapper"> {/* Wrapper for specific editor styling if needed */}
-          <HtmlEditor value={htmlContent} onChange={handleEditorChange} />
-        </div>
-      </div>
 
-      {/* Right Column: Live Preview */}
-      <div className="w-1/2 h-full flex flex-col editor-preview-pane">
-        <h2 className="section-header">Live Preview</h2> {/* Removed Tailwind classes */}
-        <div className="live-preview-wrapper"> {/* Wrapper for specific preview styling */}
-          <LivePreview htmlContent={htmlContent} onHtmlChange={handlePreviewChange} />
+        {/* Right Column: Live Preview */}
+        <div className="w-full md:w-1/2 h-auto md:h-full flex flex-col editor-preview-pane">
+          <div className="section-header">
+            <div className="flex items-center gap-2">
+              <i className="fas fa-eye"></i>
+              <h2>Live Preview</h2>
+            </div>
+            <div className="flex items-center gap-2">
+              <i className="fas fa-edit" title="Click elements to edit"></i>
+            </div>
+          </div>
+          <div className="live-preview-wrapper flex-grow">
+            <LivePreview htmlContent={htmlContent} onHtmlChange={handlePreviewChange} />
+          </div>
         </div>
       </div>
     </div>
