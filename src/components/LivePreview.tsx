@@ -9,42 +9,50 @@ interface LivePreviewProps {
 
 const LivePreview: React.FC<LivePreviewProps> = ({ htmlContent, onHtmlChange }) => {
   const previewRef = useRef<HTMLDivElement>(null);
+  const previewRef = useRef<HTMLDivElement>(null);
   const observerRef = useRef<MutationObserver | null>(null);
+  const internalChangeRef = useRef(false); // Ref to track internal changes
 
   const isEditable = (element: HTMLElement): boolean => {
     const editableTags = ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'LI', 'SPAN', 'STRONG', 'EM', 'TD', 'TH', 'FIGCAPTION', 'BLOCKQUOTE', 'PRE'];
-    // Check if the element itself is one of the editable tags
     if (editableTags.includes(element.tagName)) {
-        // Further check: ensure it doesn't primarily contain other block elements (e.g., a P tag with a DIV inside)
-        // This is a simple check; more robust parsing might be needed for complex cases.
-        const hasBlockChildren = Array.from(element.children).some(child => {
-            const displayStyle = window.getComputedStyle(child).display;
-            return ['block', 'list-item', 'table', 'flex', 'grid'].includes(displayStyle);
-        });
-        return !hasBlockChildren;
+      const hasBlockChildren = Array.from(element.children).some(child => {
+        const displayStyle = window.getComputedStyle(child).display;
+        return ['block', 'list-item', 'table', 'flex', 'grid'].includes(displayStyle);
+      });
+      return !hasBlockChildren;
     }
     return false;
   };
 
-  const makeContentEditable = useCallback((element: HTMLElement) => {
-    if (isEditable(element)) {
-      element.contentEditable = 'true';
-      element.dataset.editable = 'true'; // Mark as editable
-      element.style.outline = '1px dashed #ccc'; // Visual cue, temporary
-      element.style.cursor = 'text';
-
-      // Prevent rich text pasting, force plain text
-      element.addEventListener('paste', (e) => {
-        e.preventDefault();
-        const text = e.clipboardData?.getData('text/plain');
-        if (text) {
-          document.execCommand('insertText', false, text);
+  const makeContentEditable = useCallback((rootElement: HTMLElement) => {
+    const elementsToProcess: HTMLElement[] = [rootElement, ...Array.from(rootElement.querySelectorAll<HTMLElement>('*'))];
+    elementsToProcess.forEach(element => {
+      if (isEditable(element)) {
+        if (element.contentEditable !== 'true') { // Apply only if not already set
+            element.contentEditable = 'true';
         }
-      });
-    }
-    element.childNodes.forEach(child => {
-      if (child.nodeType === Node.ELEMENT_NODE) {
-        makeContentEditable(child as HTMLElement);
+        element.dataset.editable = 'true';
+        // Visual cues will be handled by CSS for thematic consistency
+        // element.style.outline = '1px dashed var(--current-accent)';
+        // element.style.cursor = 'text';
+
+        // Prevent rich text pasting, force plain text - attach only once
+        if (!element.dataset.pasteListenerAttached) {
+            element.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const text = e.clipboardData?.getData('text/plain');
+                if (text) {
+                document.execCommand('insertText', false, text);
+                }
+            });
+            element.dataset.pasteListenerAttached = 'true';
+        }
+      } else {
+        // Ensure non-editable elements are not accidentally editable
+        if (element.contentEditable === 'true' && !element.dataset.editable) {
+            element.contentEditable = 'false';
+        }
       }
     });
   }, []);
@@ -56,56 +64,45 @@ const LivePreview: React.FC<LivePreviewProps> = ({ htmlContent, onHtmlChange }) 
     }
 
     if (previewRef.current) {
-      // Set initial content
-      previewRef.current.innerHTML = htmlContent;
-      // Make relevant parts editable
-      makeContentEditable(previewRef.current);
+      if (!internalChangeRef.current) {
+        // External change (e.g., from CodeMirror), so update innerHTML
+        previewRef.current.innerHTML = htmlContent;
+        makeContentEditable(previewRef.current);
+      }
+      // If it was an internal change, DOM is already up-to-date.
+      // Reset the flag after potential update or if no update was needed.
+      internalChangeRef.current = false;
 
-      // Observe changes to contentEditable elements
       const observer = new MutationObserver((mutationsList) => {
-        let changed = false;
+        let changedByEditable = false;
         for (const mutation of mutationsList) {
           if (mutation.type === 'characterData' || mutation.type === 'childList') {
-            // Check if the change occurred within a contentEditable element or its children
             let targetElement = mutation.target.nodeType === Node.ELEMENT_NODE ? mutation.target as HTMLElement : mutation.target.parentElement;
             while(targetElement && targetElement !== previewRef.current) {
                 if (targetElement.isContentEditable) {
-                    changed = true;
+                    changedByEditable = true;
                     break;
                 }
                 targetElement = targetElement.parentElement;
             }
           }
-          if (changed) break;
+          if (changedByEditable) break;
         }
 
-        if (changed && previewRef.current) {
-          // Create a clone to strip our editing artifacts before getting HTML
+        if (changedByEditable && previewRef.current) {
           const clonedPreview = previewRef.current.cloneNode(true) as HTMLDivElement;
           clonedPreview.querySelectorAll('[data-editable="true"]').forEach((el) => {
             const htmlEl = el as HTMLElement;
             htmlEl.removeAttribute('contentEditable');
             htmlEl.removeAttribute('data-editable');
-            htmlEl.style.outline = '';
-            htmlEl.style.cursor = '';
-            // Remove paste event listeners if they were attached (more complex, skip for now for simplicity)
+            htmlEl.removeAttribute('data-paste-listener-attached');
+            // CSS will handle visual cues, so no style cleanup needed here for outline/cursor
           });
-          // Remove our visual cues from non-editable elements too if any
-          clonedPreview.querySelectorAll('[style*="outline:"]').forEach(el => {
-            (el as HTMLElement).style.outline = '';
-            (el as HTMLElement).style.cursor = '';
-          });
-
 
           const newHtml = clonedPreview.innerHTML;
-          // Avoid feedback loop if htmlContent is already same as newHtml
-          // This is a basic check. More sophisticated diffing might be needed.
           if (newHtml !== htmlContent) {
-            // Temporarily disconnect observer to prevent loop during programmatic update
-            observer.disconnect();
+            internalChangeRef.current = true; // Mark that the upcoming change is internal
             onHtmlChange(newHtml);
-            // Re-observe after the state update cycle (if htmlContent changes and re-renders)
-            // This will be handled by the useEffect re-running due to htmlContent change
           }
         }
       });
@@ -114,7 +111,7 @@ const LivePreview: React.FC<LivePreviewProps> = ({ htmlContent, onHtmlChange }) 
         subtree: true,
         childList: true,
         characterData: true,
-        characterDataOldValue: true, // Needed for some cases
+        // characterDataOldValue: true, // Not strictly needed if just detecting change
       });
       observerRef.current = observer;
     }
@@ -124,18 +121,23 @@ const LivePreview: React.FC<LivePreviewProps> = ({ htmlContent, onHtmlChange }) 
         observerRef.current.disconnect();
       }
     };
-  // Re-run when htmlContent changes from editor OR onHtmlChange callback changes (less likely but good practice)
-  // IMPORTANT: If onHtmlChange causes htmlContent to update, this useEffect will run again.
-  // The observer is disconnected and reconnected to apply changes and re-enable editing.
-  // The check `if (newHtml !== htmlContent)` is crucial to prevent infinite loops.
   }, [htmlContent, onHtmlChange, makeContentEditable]);
+
+  // Initial setup for content editable elements, runs once after mount
+  useEffect(() => {
+    if (previewRef.current) {
+        makeContentEditable(previewRef.current);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [makeContentEditable]); // makeContentEditable is stable due to useCallback
 
 
   return (
     <div
       ref={previewRef}
-      className="flex-grow border border-gray-300 rounded m-4 p-2 overflow-auto bg-white"
-      // dangerouslySetInnerHTML is no longer used here directly; content is managed via ref
+      className="flex-grow p-2 overflow-auto" // Removed default border, bg, rounded, m-4. These will come from live-preview-container class in globals.css
+      // CSS class for editable visual cues:
+      // [contenteditable="true"][data-editable="true"] { outline: 1px dashed var(--current-accent); cursor: text; }
     />
   );
 };
