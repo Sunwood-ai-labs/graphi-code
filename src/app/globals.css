@@ -46,22 +46,23 @@ select {
 
 /* 涼雅カラーパレット定義 */
 :root {
-    /* ライトテーマ「涼雅改」 */
-    --primary-color: #3A5F73; /* 深みのある藍色系 */
-    --secondary-color: #5F8A8B; /* やや彩度を抑えた青緑系 */
-    --accent-color: #B6955D; /* 上品な金色系 */
-    --neon-gold: #E6B422; /* 明るい金色 (アクセント) */
-    --bg-main: #FAF8F2; /* 生成り色 */
-    --bg-secondary: #EAE6DA; /* やや濃いめの生成り色 */
-    --text-primary: #333333; /* 墨色に近い濃いグレー */
-    --text-secondary: #666666; /* やや薄めのグレー */
-    --border-color: #DDDDDD; /* 主張しすぎない薄いグレー */
+    /* ライトテーマ「涼雅」 */
+    --primary-color: #025E73; /* 深い青緑 */
+    --secondary-color: #038C8C; /* 青緑 */
+    --accent-color: #04BFAD; /* 明るい青緑 */
+    --neon-gold: #F2C166; /* 金色 */
+    --bg-main: #FAFAFA; /* 明るい背景 */
+    --bg-secondary: #F2F2F2; /* やや暗い背景 */
+    --text-primary: #024A5C; /* 濃い青緑文字 */
+    --text-secondary: #026B73; /* 青緑文字 */
+    --border-color: #E0E0E0; /* ボーダー色 */
 
-    --primary-color-rgb: 58, 95, 115;
-    --secondary-color-rgb: 95, 138, 139; /* Added for completeness */
-    --accent-color-rgb: 182, 149, 93;
-    --text-primary-rgb: 51, 51, 51; /* For box-shadow */
-    --bg-main-rgb: 250, 248, 242; /* For navbar opacity */
+    --primary-color-rgb: 2, 94, 115;
+    --secondary-color-rgb: 3, 140, 140;
+    --accent-color-rgb: 4, 191, 173;
+    --neon-gold-rgb: 242, 193, 102;
+    --text-primary-rgb: 2, 74, 92;
+    --bg-main-rgb: 250, 250, 250;
 
     /* Alpha versions for theming */
     --current-primary-alpha-10: rgba(var(--primary-color-rgb), 0.1);
@@ -87,23 +88,24 @@ select {
     --font-serif-jp: "Shippori Mincho", "Kaisei Decol", Georgia, Cambria, "Times New Roman", Times, serif;
 }
 
-/* ダークテーマ「月夜」 */
+/* ダークテーマ「夜涼」 */
 [data-theme="dark"] {
-    --primary-color: #B6955D; /* ライトのアクセントカラーをメインに */
-    --secondary-color: #8A9BA8; /* 銀鼠色 */
-    --accent-color: #734A5F; /* 深みのある赤紫 */
-    --neon-gold: #F0C27B; /* 明るい金色 */
-    --bg-main: #1A222C; /* 非常に濃い藍色 */
-    --bg-secondary: #2A3440; /* やや明るい濃い灰色 */
-    --text-primary: #EAEAEA; /* 明るい生成り色 */
-    --text-secondary: #CCCCCC; /* やや暗めの白に近いグレー */
-    --border-color: #444444; /* 背景に馴染む濃いグレー */
+    --primary-color: #04BFAD; /* 明るい青緑 */
+    --secondary-color: #F2C166; /* 金色 */
+    --accent-color: #038C8C; /* 青緑 */
+    --neon-gold: #66D9EF; /* 明るいシアン */
+    --bg-main: #0A1A1F; /* 非常に濃い青 */
+    --bg-secondary: #1A2F35; /* やや明るい濃い青 */
+    --text-primary: #E8F4F8; /* 明るい青白 */
+    --text-secondary: #B8D4E3; /* やや暗い青白 */
+    --border-color: #2A3E46; /* 濃い青グレー */
 
-    --primary-color-rgb: 182, 149, 93;
-    --secondary-color-rgb: 138, 155, 168; /* Added for completeness */
-    --accent-color-rgb: 115, 74, 95;
-    --text-primary-rgb: 234, 234, 234; /* For box-shadow */
-    --bg-main-rgb: 26, 34, 44; /* For navbar opacity */
+    --primary-color-rgb: 4, 191, 173;
+    --secondary-color-rgb: 242, 193, 102;
+    --accent-color-rgb: 3, 140, 140;
+    --neon-gold-rgb: 102, 217, 239;
+    --text-primary-rgb: 232, 244, 248;
+    --bg-main-rgb: 10, 26, 31;
 
     /* Alpha versions for dark theme */
     --current-primary-alpha-10: rgba(var(--primary-color-rgb), 0.1);
@@ -126,7 +128,38 @@ select {
 
 /* スムーズなテーマ切り替えアニメーション */
 * {
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease, transform 0.3s ease;
+}
+
+/* アニメーション */
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes sparkle {
+    0% { opacity: 0.3; transform: scale(1); }
+    100% { opacity: 0.7; transform: scale(1.1); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* フローティングエフェクト */
+.section-header i {
+    animation: float 3s ease-in-out infinite;
+    display: inline-block;
+}
+
+/* フェードインアニメーション */
+.editor-preview-pane {
+    animation: fadeIn 0.6s ease-out;
+}
+
+.editor-preview-pane:nth-child(2) {
+    animation-delay: 0.2s;
 }
 
 /* 基本設定 */
@@ -143,21 +176,25 @@ body {
 
 /* Navbar styling */
 .navbar {
-    position: sticky;
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    z-index: 50;
-    background: rgba(var(--current-bg-main-rgb), 0.85); /* Updated to use the new variable */
+    z-index: 9999;
+    background: rgba(255,255,255,0.95);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    padding: 1rem 1.5rem; /*上下のパディングを増やす*/
+    padding: 12px 24px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 1px 3px rgba(var(--current-text-primary-rgb), 0.08); /*より繊細な影*/
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     color: var(--current-text-primary);
-    border-bottom: 1px solid var(--current-border-color);
+    transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .navbar {
+    background: rgba(10,26,31,0.95) !important;
 }
 /* Remove theme-specific overrides for navbar background as it's now handled by --current-bg-main-rgb */
 
@@ -179,64 +216,113 @@ body {
     background: var(--current-accent);
     color: white;
     border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 0.75rem;
+    padding: 8px 16px;
+    border-radius: 12px;
     cursor: pointer;
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
-    gap: 0.375rem;
+    gap: 6px;
     font-family: "M PLUS Rounded 1c", sans-serif;
     font-size: 0.9rem;
     font-weight: 500;
 }
+
 .nav-btn:hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.nav-btn-secondary {
+    background: var(--current-primary) !important;
 }
 
 /* Main content layout */
 .main-content-area {
     flex-grow: 1;
     display: flex;
+    margin-top: 80px; /* Navbar height offset */
+    background: linear-gradient(135deg, var(--current-bg-main), var(--current-bg-secondary));
+    position: relative;
+    overflow: hidden;
+}
+
+/* 青海波パターン背景 */
+.main-content-area::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M0,50 Q25,25 50,50 T100,50' stroke='%23038C8C' fill='none' opacity='0.08'/%3E%3Cpath d='M0,60 Q25,35 50,60 T100,60' stroke='%23025E73' fill='none' opacity='0.06'/%3E%3C/svg%3E");
+    z-index: 0;
+}
+
+[data-theme="dark"] .main-content-area::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='20' cy='20' r='1' fill='%23F2C166' opacity='0.6'/%3E%3Ccircle cx='80' cy='30' r='0.5' fill='%2366D9EF' opacity='0.8'/%3E%3Ccircle cx='60' cy='70' r='0.8' fill='%2304BFAD' opacity='0.7'/%3E%3Ccircle cx='30' cy='80' r='0.6' fill='%23038C8C' opacity='0.5'/%3E%3C/svg%3E");
 }
 
 .editor-preview-pane {
-  border-color: var(--current-border-color) !important; /* Override Tailwind if necessary */
-  background-color: var(--current-bg-main) !important;
-  /* h-full is applied in component, ensure it works with flex parent */
+  border-color: var(--current-border-color) !important;
+  background: rgba(255,255,255,0.9) !important;
+  backdrop-filter: blur(5px);
+  border-radius: 15px;
+  margin: 20px 10px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+  z-index: 2;
+  position: relative;
+  overflow: hidden;
 }
-.editor-preview-pane.border-r { /* Specifically target the one with border-r if needed */
-    border-right-width: 1px;
+
+[data-theme="dark"] .editor-preview-pane {
+    background: rgba(26,47,53,0.9) !important;
+}
+
+.editor-preview-pane.border-r {
+    border-right: 1px solid var(--current-border-color);
+    border-radius: 15px 0 0 15px;
+    margin-right: 0;
 }
 
 
 .section-header {
-    font-size: 1.125rem;
-    font-weight: 600;
-    padding: 1rem;
-    background-color: var(--current-bg-secondary);
-    border-bottom: 1px solid var(--current-border-color);
-    color: var(--current-text-primary);
+    font-size: 1.2rem;
+    font-weight: 700;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, var(--current-primary), var(--current-secondary));
+    color: white;
     font-family: "Kaisei Decol", serif;
+    border-radius: 15px 15px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 /* CodeMirror Editor Theming */
-/* Wrapper for HtmlEditor component if needed, or style CodeMirror's own wrapper */
-/* The .cm-editor class is usually the outermost CodeMirror generated div */
 .cm-editor {
-    height: 100% !important; /* Ensure it fills container */
-    outline: none !important; /* Remove default outline */
+    height: 100% !important;
+    outline: none !important;
+    border-radius: 0 0 15px 15px;
+    overflow: hidden;
+    background: var(--current-bg-secondary) !important;
+}
+
+.editor-component-wrapper {
+    border-radius: 0 0 15px 15px;
+    overflow: hidden;
+    background: var(--current-bg-secondary);
 }
 
 /* Live Preview Area */
-.live-preview-container { /* Applied to the div wrapping the LivePreview component's output div */
-  background-color: var(--current-bg-main); /* Or --current-bg-secondary for contrast */
+.live-preview-wrapper {
+  background-color: var(--current-bg-main);
   color: var(--current-text-primary);
-  border: 1px solid var(--current-border-color);
-  /* padding is on the inner div now in LivePreview.tsx */
+  border-radius: 0 0 15px 15px;
   height: 100%;
   overflow: auto;
+  padding: 20px;
 }
 
 /* Visual cue for contentEditable elements in LivePreview */
@@ -405,55 +491,64 @@ body {
 .cm-error { background-color: rgba(255,0,0,0.2) !important; color: red !important; }
 
 /* Responsive adjustments */
-@media (max-width: 767px) { /* Corresponds to Tailwind's `md` breakpoint, affects screens smaller than 768px */
+@media (max-width: 768px) {
   .navbar {
-    padding: 0.75rem 1rem; /* Reduce padding on smaller screens */
+    padding: 10px 16px;
   }
 
   .nav-brand {
-    font-size: 1.25rem; /* Reduce brand font size */
+    font-size: 1.2rem;
   }
 
   .nav-buttons {
-    gap: 0.5rem; /* Reduce gap between buttons */
+    gap: 8px;
   }
 
   .nav-btn {
-    padding: 0.5rem 0.8rem; /* Reduce button padding */
-    font-size: 0.8rem; /* Reduce button font size */
-    gap: 0.3rem; /* Reduce gap in button */
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    gap: 4px;
   }
 
-  .nav-btn i { /* If icons are used in nav buttons, adjust their size */
-    font-size: 0.9em;
+  .nav-btn span {
+    display: none; /* Hide text on mobile, show only icons */
+  }
+
+  .main-content-area {
+    margin-top: 60px;
+    flex-direction: column;
+  }
+
+  .editor-preview-pane {
+    margin: 10px;
+    width: calc(100% - 20px);
+    min-height: 400px;
+  }
+
+  .editor-preview-pane.border-r {
+    border-right: none;
+    border-radius: 15px;
+    margin-right: 10px;
   }
 
   .section-header {
-    font-size: 1rem; /* Reduce section header font size */
-    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    padding: 0.8rem 1rem;
   }
 
-  .section-header h2 { /* If h2 is directly inside section-header */
-      font-size: 1rem; /* Ensure consistency */
+  .section-header h2 {
+    font-size: 1rem;
   }
 
-  /* Live Preview font size adjustments for smaller screens */
-  .live-preview-container h1 { font-size: 1.8em; }
-  .live-preview-container h2 { font-size: 1.5em; }
-  .live-preview-container h3 { font-size: 1.25em; }
-  .live-preview-container h4 { font-size: 1.1em; }
-  .live-preview-container p {
+  .live-preview-wrapper {
+    padding: 15px;
+  }
+
+  .live-preview-wrapper h1 { font-size: 1.8em; }
+  .live-preview-wrapper h2 { font-size: 1.5em; }
+  .live-preview-wrapper h3 { font-size: 1.25em; }
+  .live-preview-wrapper p {
     font-size: 0.9rem;
-    line-height: 1.7; /* Adjust line height for smaller paragraph font */
-  }
-
-  /* Adjust editor and preview pane heights for stacked view if necessary */
-  /* This might be better handled by ensuring parent containers allow content to define height (h-auto already applied in page.tsx) */
-  .editor-preview-pane {
-      min-height: 300px; /* Ensure panes have a minimum height when stacked */
-  }
-  .editor-component-wrapper, .live-preview-wrapper {
-      flex-grow: 1; /* Allow editor/preview content to fill the pane */
-      overflow-y: auto; /* Add scroll if content overflows */
+    line-height: 1.6;
   }
 }
