@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* 涼雅カラーパレット定義 */
 :root {
     /* ライトテーマ「涼雅」デフォルト */
@@ -5,45 +9,227 @@
     --secondary-color: #038C8C;
     --accent-color: #04BFAD;
     --neon-gold: #F2C166;
-    --bg-dark: #F2F2F2;
-    --bg-light: #FAFAFA;
+    --bg-main: #FAFAFA; /* Was --bg-light */
+    --bg-secondary: #F2F2F2; /* Was --bg-dark, for elements on bg-main */
     --text-primary: #024A5C;
     --text-secondary: #026B73;
+    --border-color: #D1D5DB; /* Tailwind gray-300 for initial consistency */
 
     /* テーマ切り替え用の共通変数 */
     --current-primary: var(--primary-color);
     --current-secondary: var(--secondary-color);
     --current-accent: var(--accent-color);
     --current-neon: var(--neon-gold);
-    --current-bg-dark: var(--bg-dark);
-    --current-bg-light: var(--bg-light);
+    --current-bg-main: var(--bg-main);
+    --current-bg-secondary: var(--bg-secondary);
     --current-text-primary: var(--text-primary);
     --current-text-secondary: var(--text-secondary);
+    --current-border-color: var(--border-color);
 }
 
 /* ダークテーマ「夜涼」 */
 [data-theme="dark"] {
-    --current-primary: #04BFAD;
-    --current-secondary: #F2C166;
-    --current-accent: #038C8C;
-    --current-neon: #66D9EF;
-    --current-bg-dark: #0A1A1F;
-    --current-bg-light: #1A2F35;
-    --current-text-primary: #E8F4F8;
-    --current-text-secondary: #B8D4E3;
-}
+    --primary-color: #04BFAD;
+    --secondary-color: #F2C166;
+    --accent-color: #038C8C;
+    --neon-gold: #66D9EF; /* Example used different neon for dark */
+    --bg-main: #0A1A1F;
+    --bg-secondary: #1A2F35;
+    --text-primary: #E8F4F8;
+    --text-secondary: #B8D4E3;
+    --border-color: #4B5563; /* Tailwind gray-600 for dark */
 
-/* ナビゲーションバーのテーマ対応 */
-[data-theme="dark"] .navbar {
-    background: rgba(10,26,31,0.95) !important;
+    /* Update current variables for dark theme */
+    --current-primary: var(--primary-color);
+    --current-secondary: var(--secondary-color);
+    --current-accent: var(--accent-color);
+    --current-neon: var(--neon-gold);
+    --current-bg-main: var(--bg-main);
+    --current-bg-secondary: var(--bg-secondary);
+    --current-text-primary: var(--text-primary);
+    --current-text-secondary: var(--text-secondary);
+    --current-border-color: var(--border-color);
 }
 
 /* スムーズなテーマ切り替えアニメーション */
 * {
-    transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
-/* フォント定義 */
+/* 基本設定 */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "M PLUS Rounded 1c", sans-serif; /* Applied M PLUS Rounded 1c as base */
+    background-color: var(--current-bg-main);
+    color: var(--current-text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    display: flex; /* Ensure body takes full height for flex column layout in RootLayout */
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* CodeMirror theming (basic) - might need more specific selectors if CodeMirror version/theme is known */
+.cm-s-default, .CodeMirror { /* A common CodeMirror class, adjust if necessary */
+    background-color: var(--current-bg-secondary) !important;
+    color: var(--current-text-primary) !important;
+    border: 1px solid var(--current-border-color);
+}
+.cm-s-default .CodeMirror-gutters, .CodeMirror-gutters {
+    background-color: var(--current-bg-secondary) !important;
+    border-right: 1px solid var(--current-border-color) !important;
+}
+.cm-s-default .CodeMirror-guttermarker, .CodeMirror-guttermarker,
+.cm-s-default .CodeMirror-guttermarker-subtle, .CodeMirror-guttermarker-subtle,
+.cm-s-default .CodeMirror-linenumber, .CodeMirror-linenumber {
+    color: var(--current-text-secondary) !important;
+}
+.cm-s-default .CodeMirror-cursor, .CodeMirror-cursor {
+    border-left: 1px solid var(--current-text-primary) !important;
+}
+.cm-s-default .cm-keyword, .cm-keyword { color: var(--current-accent) !important; }
+.cm-s-default .cm-atom, .cm-atom { color: var(--current-secondary) !important; }
+.cm-s-default .cm-number, .cm-number { color: #AE81FF !important; } /* Example purple, pick from theme if available */
+.cm-s-default .cm-def, .cm-def { color: var(--current-text-primary) !important; }
+.cm-s-default .cm-variable, .cm-variable,
+.cm-s-default .cm-property, .cm-property,
+.cm-s-default .cm-operator, .cm-operator { color: var(--current-text-primary) !important; }
+.cm-s-default .cm-variable-2, .cm-variable-2 { color: var(--current-primary) !important; }
+.cm-s-default .cm-variable-3, .cm-variable-3, .cm-s-default .cm-type, .cm-type { color: #FD971F !important; } /* Example orange */
+.cm-s-default .cm-comment, .cm-comment { color: var(--current-text-secondary) !important; font-style: italic; }
+.cm-s-default .cm-string, .cm-string { color: #A6E22E !important; } /* Example green */
+.cm-s-default .cm-string-2, .cm-string-2 { color: var(--current-accent) !important; }
+.cm-s-default .cm-meta, .cm-meta { color: #75715E !important; } /* Example gray */
+.cm-s-default .cm-qualifier, .cm-qualifier { color: #525252 !important; }
+.cm-s-default .cm-builtin, .cm-builtin { color: var(--current-secondary) !important; }
+.cm-s-default .cm-bracket, .cm-bracket { color: #F8F8F2 !important; }
+.cm-s-default .cm-tag, .cm-tag { color: #F92672 !important; } /* Example pink */
+.cm-s-default .cm-attribute, .cm-attribute { color: #66D9EF !important; } /* Example cyan */
+.cm-s-default .cm-hr, .cm-hr { color: #75715E !important; }
+.cm-s-default .cm-link, .cm-link { color: var(--current-accent) !important; }
+.cm-s-default .cm-error, .cm-error { color: #F92672 !important; }
+.CodeMirror-selected {
+    background-color: rgba(var(--current-primary-rgb, 2, 94, 115), 0.3) !important; /* Needs RGB version of primary */
+}
+[data-theme="dark"] .CodeMirror-selected {
+    background-color: rgba(var(--current-primary-rgb-dark, 4, 191, 173), 0.3) !important; /* Needs RGB version of primary for dark */
+}
+
+
+/* Live Preview Area */
+.live-preview-container {
+    background-color: var(--current-bg-main);
+    color: var(--current-text-primary);
+    border: 1px solid var(--current-border-color);
+    padding: 1rem;
+    overflow: auto;
+    height: 100%; /* Ensure it fills available space */
+}
+
+/* General Application Layout Styling */
+/* Assuming layout.tsx will have a structure like:
+<body>
+  <nav className="navbar ...">...</nav>
+  <main className="main-content ...">{children}</main> // children is EditorPage
+</body>
+*/
+
+/* Navbar styling from example */
+.navbar {
+    position: sticky; /* Changed from fixed to sticky for better flow with Next.js */
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50; /* Tailwind's z-50 */
+    background: rgba(250, 250, 250, 0.85); /* --current-bg-main with opacity */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 0.75rem 1.5rem; /* 12px 24px */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    color: var(--current-text-primary);
+    border-bottom: 1px solid var(--current-border-color);
+}
+
+[data-theme="dark"] .navbar {
+    background: rgba(10, 26, 31, 0.85) !important; /* --current-bg-main (dark) with opacity */
+}
+
+.nav-brand {
+    color: var(--current-primary);
+    font-size: 1.5rem; /* kaisei-decol-bold will be applied in component */
+    font-weight: 700; /* Duplicates kaisei-decol-bold but good fallback */
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; /* 8px */
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 0.75rem; /* 12px */
+}
+
+.nav-btn {
+    background: var(--current-accent);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem; /* 8px 16px */
+    border-radius: 0.75rem; /* 12px */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem; /* 6px */
+    font-family: "M PLUS Rounded 1c", sans-serif; /* Ensure button font */
+    font-size: 0.9rem;
+    font-weight: 500; /* Added for better visibility */
+}
+
+.nav-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.main-content-area {
+    flex-grow: 1; /* Make main content area take remaining vertical space */
+    display: flex; /* This will be the container for editor and preview */
+    /* Default to row, but EditorPage might switch to column on small screens */
+    /* The two-column layout (w-1/2) is handled by EditorPage's Tailwind classes */
+}
+
+/* Styling for the headers of editor/preview sections if they exist */
+.section-header {
+    font-size: 1.125rem; /* text-lg */
+    font-weight: 600; /* font-semibold */
+    padding: 1rem; /* p-4 */
+    background-color: var(--current-bg-secondary);
+    border-bottom: 1px solid var(--current-border-color);
+    color: var(--current-text-primary);
+    font-family: "Kaisei Decol", serif; /* Use Kaisei for headers */
+}
+
+
+/* Responsive adjustments for navbar */
+@media (max-width: 768px) {
+    .nav-brand {
+        font-size: 1.2rem !important;
+    }
+    .nav-buttons {
+        gap: 0.5rem !important; /* 8px */
+    }
+    .nav-btn {
+        padding: 0.375rem 0.75rem !important; /* 6px 12px */
+        font-size: 0.8rem !important;
+    }
+    .main-content-area {
+      flex-direction: column; /* Stack editor and preview on smaller screens */
+    }
+}
+
+/* Font classes from example (optional, can be applied directly in components) */
 .kaisei-decol-regular {
     font-family: "Kaisei Decol", serif;
     font-weight: 400;
@@ -68,526 +254,49 @@
     font-style: normal;
 }
 
-/* 基本設定 */
-body {
-    margin: 0;
-    padding: 0;
-    font-family: "M PLUS Rounded 1c", sans-serif;
-    background: var(--current-bg-light);
-    /* overflow-x: auto; */ /* Removed to prevent double scrollbars with Next.js layout */
-}
-
-/* ナビゲーションバー */
-.navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 9999;
-    background: rgba(255,255,255,0.95);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px); /* Safari support */
-    padding: 12px 24px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-.nav-brand {
-    color: var(--current-primary);
-    font-size: 1.5rem;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.nav-buttons {
-    display: flex;
-    gap: 12px;
-}
-
-.nav-btn {
-    background: var(--current-accent);
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-family: inherit;
-    font-size: 0.9rem;
-}
-
-.nav-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-}
-
-#toggleEdit { /* This will be handled by React state, but keep style for reference */
-    background: var(--current-primary);
-}
-
-/* サムネイル基本スタイル */
-.thumbnail-container {
-    width: 1920px;
-    height: 1080px;
-    max-width: 100vw;
-    max-height: calc(100vh - 80px); /* Adjust for navbar */
-    /* max-height: 56.25vw; */ /* This can cause issues if viewport height is restricted */
-    position: relative;
-    overflow: hidden;
-    background: linear-gradient(135deg, var(--current-bg-light), var(--current-bg-dark));
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1.2fr 0.8fr;
-    grid-template-rows: 2fr 1fr;
-    gap: 40px;
-    padding: 60px;
-    box-sizing: border-box;
-}
-
-/* 青海波パターン背景 */
-.thumbnail-container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M0,50 Q25,25 50,50 T100,50' stroke='%23038C8C' fill='none' opacity='0.08'/%3E%3Cpath d='M0,60 Q25,35 50,60 T100,60' stroke='%23025E73' fill='none' opacity='0.06'/%3E%3C/svg%3E");
-    z-index: 0;
-}
-
-[data-theme="dark"] .thumbnail-container::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='20' cy='20' r='1' fill='%23F2C166' opacity='0.6'/%3E%3Ccircle cx='80' cy='30' r='0.5' fill='%2366D9EF' opacity='0.8'/%3E%3Ccircle cx='60' cy='70' r='0.8' fill='%2304BFAD' opacity='0.7'/%3E%3Ccircle cx='30' cy='80' r='0.6' fill='%23038C8C' opacity='0.5'/%3E%3C/svg%3E");
-}
-
-/* タイトルセクション */
-.title-section {
-    grid-column: 1;
-    grid-row: 1 / span 2;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 30px;
-    z-index: 2;
-    position: relative;
-}
-
-.main-title {
-    font-size: clamp(3rem, 8vw, 5.5rem);
-    color: var(--current-primary);
-    margin: 0;
-    line-height: 1.1;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.title-icon {
-    font-size: clamp(4rem, 10vw, 7rem);
-    color: var(--current-accent);
-    margin-bottom: 10px;
-}
-
-.sub-title {
-    font-size: clamp(1.2rem, 3vw, 2rem);
-    color: var(--current-secondary);
-    margin: 0;
-    line-height: 1.3;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.tech-badges {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin-top: 20px;
-}
-
-.badge {
-    background: var(--current-accent);
-    color: white;
-    padding: 12px 20px;
-    border-radius: 25px;
-    font-size: clamp(0.9rem, 2vw, 1.2rem);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    box-shadow: 0 4px 12px rgba(4,191,173,0.3);
-}
-
-/* ビジュアルセクション */
-.visual-section {
-    grid-column: 2;
-    grid-row: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 30px;
-    z-index: 2;
-    position: relative;
-}
-
-.main-graphic {
-    font-size: clamp(6rem, 15vw, 12rem);
-    color: var(--current-primary);
-    position: relative;
-    animation: float 3s ease-in-out infinite;
-}
-
-.secondary-icons {
-    display: flex;
-    gap: 20px;
-    opacity: 0.8;
-}
-
-.secondary-icons i {
-    font-size: clamp(2rem, 5vw, 3.5rem);
-    color: var(--current-secondary);
-}
-
-/* ポイントセクション */
-.points-section {
-    grid-column: 2;
-    grid-row: 2;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    z-index: 2;
-    position: relative;
-}
-
-.feature-point {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    background: rgba(255,255,255,0.9);
-    padding: 15px 20px;
-    border-radius: 15px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px); /* Safari support */
-}
-
-[data-theme="dark"] .feature-point {
-    background: rgba(26,47,53,0.9);
-    color: var(--current-text-primary); /* Ensure text color changes in dark mode */
-}
-
-.feature-point i {
-    font-size: clamp(1.2rem, 3vw, 1.8rem);
-    color: var(--current-accent);
-    flex-shrink: 0;
-}
-
-.feature-point span {
-    font-size: clamp(0.9rem, 2vw, 1.1rem);
-    color: var(--current-text-primary); /* Use theme variable */
-    font-weight: 500;
-}
-
-/* アニメーション */
-@keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
-}
-
-/* Font Awesome アイコンサイズ調整 (already part of FA, but can be overridden) */
-.icon-xl { font-size: clamp(4rem, 8vw, 8rem) !important; }
-.icon-lg { font-size: clamp(2rem, 4vw, 4rem) !important; }
-.icon-md { font-size: clamp(1.5rem, 3vw, 2.5rem) !important; }
-.icon-sm { font-size: clamp(1rem, 2vw, 1.5rem) !important; }
-
-/* 編集モード用スタイル */
-.editable-icon {
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-}
-
-.editable-icon:hover {
-    transform: scale(1.1);
-    filter: drop-shadow(0 0 8px var(--current-neon));
-}
-
-.editing .editable-icon::after {
-    content: '✏️';
-    position: absolute;
-    top: -10px;
-    right: -10px;
-    font-size: 0.8rem;
-    background: var(--current-neon);
-    color: var(--current-primary); /* Ensure visibility */
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
-
-/* アイコン選択モーダル */
-.icon-modal {
-    display: none; /* Hidden by default, shown by JS */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.8);
-    z-index: 10000;
-    align-items: center;
-    justify-content: center;
-}
-
-.icon-modal.show {
-    display: flex; /* Shown by adding .show class */
-}
-
-.icon-modal-content {
-    background: var(--current-bg-light);
-    padding: 30px;
-    border-radius: 20px;
-    max-width: 600px;
-    width: 90%; /* Ensure it's not too wide on smaller viewports */
-    max-height: 80vh;
-    overflow-y: auto;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-    position: relative; /* For close button positioning */
-}
-
-[data-theme="dark"] .icon-modal-content {
-    background: var(--current-bg-dark);
-    color: var(--current-text-primary);
-}
-
-.icon-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-    gap: 15px;
-    margin: 20px 0;
-}
-
-.icon-option {
-    padding: 15px;
-    text-align: center;
-    border: 2px solid transparent;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    background: rgba(255,255,255,0.5); /* Light theme option background */
-    color: var(--current-text-secondary); /* Text color for options */
-}
-
-[data-theme="dark"] .icon-option {
-    background: rgba(26,47,53,0.5); /* Dark theme option background */
-    color: var(--current-text-secondary);
-}
-
-.icon-option:hover {
-    border-color: var(--current-accent);
-    background: var(--current-accent);
-    color: white !important; /* Ensure text is white on hover */
-    transform: scale(1.1);
-}
-
-.icon-option i {
-    font-size: 2rem;
-}
-
-.modal-header {
-    text-align: center;
-    margin-bottom: 20px;
-    color: var(--current-primary);
-    font-family: "Kaisei Decol", serif;
-    font-size: 1.5rem;
-}
-
-.modal-close {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: var(--current-text-secondary); /* Use themed text color */
-    padding: 5px;
-    line-height: 1;
-}
-.modal-close:hover {
-    color: var(--current-primary);
-}
-
-
-/* ドラッグ＆ドロップ */
-.draggable {
-    cursor: move !important; /* Ensure move cursor is shown */
-}
-
-.dragging {
-    opacity: 0.5;
-    transform: rotate(5deg);
-}
-
-.drop-zone {
-    border: 2px dashed var(--current-accent) !important;
-    background: rgba(4,191,173,0.1) !important;
-}
-
-/* レスポンシブ対応 */
-@media (max-width: 1200px) { /* Adjust breakpoint for better thumbnail scaling */
-    .thumbnail-container {
-        /* Allow scaling by removing fixed pixel dimensions */
-        width: auto;
-        height: auto;
-        /* Maintain aspect ratio for larger screens if possible, but allow flexibility */
-        /* aspect-ratio: 16 / 9;  */ /* Can be added if strict aspect ratio is needed */
-        max-height: calc(100vh - 80px); /* Ensure it fits viewport height */
-        padding: 40px; /* Reduce padding */
-    }
-}
-
-@media (max-width: 992px) { /* Tablet and smaller */
-    .thumbnail-container {
-        grid-template-columns: 1fr; /* Stack columns */
-        grid-template-rows: auto auto auto; /* Adjust rows */
-        padding: 30px 20px;
-        gap: 30px;
-        max-height: none; /* Allow content to define height */
-        height: auto;
-    }
-    .title-section {
-        grid-column: 1;
-        grid-row: 1;
-        text-align: center; /* Center title elements */
-    }
-    .main-title {
-        align-items: center; /* Center title icon within title */
-    }
-    .sub-title {
-       justify-content: center; /* Center subtitle icon */
-    }
-    .tech-badges {
-        justify-content: center; /* Center badges */
-    }
-    .visual-section {
-        grid-column: 1;
-        grid-row: 2;
-    }
-    .points-section {
-        grid-column: 1;
-        grid-row: 3;
-    }
-}
-
-
-@media (max-width: 768px) { /* Mobile specific adjustments */
-    .nav-brand {
-        font-size: 1.2rem !important;
-    }
-    .nav-buttons {
-        gap: 8px !important;
-    }
-    .nav-btn {
-        padding: 6px 12px !important;
-        font-size: 0.8rem !important;
-    }
-    .thumbnail-container {
-        padding: 20px 15px; /* Further reduce padding */
-        gap: 20px;
-    }
-    .main-title {
-        font-size: clamp(2.5rem, 7vw, 4.5rem); /* Adjust title font size for mobile */
-    }
-    .title-icon {
-        font-size: clamp(3rem, 8vw, 6rem); /* Adjust icon font size */
-    }
-    .sub-title {
-        font-size: clamp(1rem, 2.5vw, 1.5rem); /* Adjust subtitle font size */
-    }
-    .badge {
-        padding: 10px 15px;
-        font-size: clamp(0.8rem, 1.8vw, 1rem);
-    }
-    .main-graphic {
-        font-size: clamp(5rem, 12vw, 10rem);
-    }
-    .secondary-icons i {
-        font-size: clamp(1.8rem, 4vw, 3rem);
-    }
-    .feature-point {
-        padding: 12px 15px;
-    }
-    .feature-point i {
-        font-size: clamp(1rem, 2.5vw, 1.5rem);
-    }
-    .feature-point span {
-        font-size: clamp(0.8rem, 1.8vw, 1rem);
-    }
-    .icon-grid {
-        grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
-    }
-    .icon-modal-content {
-        padding: 20px;
-        max-height: 70vh;
-    }
-}
-
-/* 夏の装飾エフェクト */
-.summer-effect {
-    position: absolute;
-    top: 20%;
-    right: 10%;
-    font-size: 2rem; /* Base size */
-    color: var(--current-neon);
-    opacity: 0.3;
-    animation: sparkle 2s ease-in-out infinite alternate;
-    z-index: 1; /* Ensure it's above the ::before pseudo-element */
-}
-
-@media (max-width: 768px) {
-    .summer-effect {
-        font-size: 1.5rem; /* Smaller on mobile */
-        top: 15%;
-        right: 5%;
-    }
-}
-
-@keyframes sparkle {
-    0% { opacity: 0.3; transform: scale(1); }
-    100% { opacity: 0.7; transform: scale(1.1); }
-}
-
-/* Ensure html and body take full height for sticky footer or full-page layouts if needed */
-html, body {
-    height: 100%;
-    overflow-x: hidden; /* Prevent horizontal scroll from content */
-}
-
-/* Fix for Next.js body having potential margin/padding issues */
-body > div:first-child {
+/* Ensure html and body take full height */
+html {
     height: 100%;
 }
+/* Remove Tailwind's default body background if applying our own */
+/* body { background-color: transparent; } */
 
-/* Ensure main content area can grow */
-main {
-    flex-grow: 1;
-    display: flex; /* Added to help center thumbnail-container if its max-width is reached */
-    flex-direction: column; /* Ensure children stack correctly */
-    align-items: center; /* Center content horizontally */
-    /* justify-content: center; */ /* Center content vertically - only if thumbnail shouldn't stick to top */
-    padding-top: 80px; /* Account for fixed navbar height */
-    box-sizing: border-box;
-    width: 100%;
+/* Tailwind utility overrides if needed, or prefer applying new classes */
+/* Example:
+.bg-gray-100 { background-color: var(--current-bg-main) !important; }
+.border-gray-300 { border-color: var(--current-border-color) !important; }
+*/
+
+/* Define RGB versions of primary colors for CodeMirror selection */
+:root {
+    --primary-color-rgb: 2, 94, 115;
+    --primary-color-rgb-dark: 4, 191, 173;
+}
+[data-theme="dark"] {
+    --current-primary-rgb: var(--primary-color-rgb-dark);
+}
+:root { /* Light theme default for current-primary-rgb */
+    --current-primary-rgb: var(--primary-color-rgb);
+}
+
+/* Tailwind class overrides for EditorPage structure */
+.editor-preview-pane {
+  /* This class would be applied to the parent div of HtmlEditor and LivePreview in EditorPage */
+  /* Or directly style the w-1/2 divs if they don't have a common parent class */
+  border-color: var(--current-border-color);
+  background-color: var(--current-bg-main); /* Ensure pane background matches */
+}
+
+.editor-preview-pane > .flex-grow { /* Target the div that wraps HtmlEditor/LivePreview component */
+  overflow: auto;
+  border: 1px solid var(--current-border-color); /* Add border around editor/preview content area */
+  border-top: none; /* Header has bottom border, so remove top border here */
+}
+
+/* LivePreview iframe specific styling if needed */
+/* For example, to ensure its body also gets themed if it's a simple srcDoc iframe */
+/* This is highly dependent on how LivePreview is implemented */
+.live-preview-iframe {
+  background-color: var(--current-bg-main);
+  color: var(--current-text-primary);
 }
